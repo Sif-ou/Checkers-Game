@@ -7,13 +7,13 @@ SDL_Color white  = { 255 , 255 , 255 , SDL_ALPHA_OPAQUE };
 SDL_Color red    = { 255 , 0 , 0 , SDL_ALPHA_OPAQUE };
 
 
-int Tracker::CordCalcu ( int x )
+int CordCalcu ( int x )
 {
   x = ( x - VIDE ) / D ;
    return x ;
 }
 
-bool Tracker::AllowedMove ( int n )
+bool AllowedMove ( int n )
 {
    if ( n > 7 )
     return false ;
@@ -25,7 +25,7 @@ bool Tracker::AllowedMove ( int n )
    return false ;
 }
 
-bool Tracker::AllowedMoveInBoard ( cell temp [grid][grid] , int x , int y ) 
+bool AllowedMoveInBoard ( cell temp [grid][grid] , int x , int y ) 
 {
   if( temp[y][x].empty == true ) 
     return true ;
@@ -34,6 +34,29 @@ bool Tracker::AllowedMoveInBoard ( cell temp [grid][grid] , int x , int y )
     return false ;
    
    return false ;
+}
+
+void TDraw( SDL_Renderer * r , SDL_Color color , int x , int y )
+{
+  SDL_Rect track_rec ;
+  int currentX = ( D * x ) ,
+      currentY = ( D * y ) ;
+
+  track_rec.x = currentX + ( D / 2 ) + VIDE ; 
+  track_rec.y = currentY + ( D / 2 ) + VIDE ;
+
+  FillO ( r , color , track_rec.x , track_rec.y ) ;
+}
+
+void DrawPause( SDL_Renderer * r , SDL_Color color , int x , int y )
+{
+  SDL_Rect pause ;
+  pause.x = x * D + VIDE ;
+  pause.y = y * D + VIDE ;
+  pause.w = D ;
+  pause.h = D ;
+  SDL_SetRenderDrawColor ( r , color.r , color.g , color.b , color.a ) ;
+  SDL_RenderDrawRect ( r , &pause ) ;
 }
 
 bool Tracker::CorrectCord()
@@ -46,28 +69,6 @@ bool Tracker::CorrectCord()
     return true ;
   
     return false ;
-}
-
-void Tracker::TDraw( SDL_Renderer * r , SDL_Color color )
-{
-  int currentX = ( D * x_cord ) ,
-      currentY = ( D * y_cord ) ;
-
-  track_rec.x = currentX + ( D / 2 ) + VIDE ; 
-  track_rec.y = currentY + ( D / 2 ) + VIDE ;
-
-  FillO ( r , color , track_rec.x , track_rec.y ) ;
-}
-
-void Tracker::DrawPause( SDL_Renderer * r , SDL_Color color )
-{
-  SDL_Rect pause ;
-  pause.x = x_cord * D + VIDE ;
-  pause.y = y_cord * D + VIDE ;
-  pause.w = D ;
-  pause.h = D ;
-  SDL_SetRenderDrawColor ( r , color.r , color.g , color.b , color.a ) ;
-  SDL_RenderDrawRect ( r , &pause ) ;
 }
 
 void Tracker::DefaultTrack()
@@ -175,21 +176,21 @@ void Tracker::Movement_Direction ( SDL_Renderer * r   , int n  )
         case 1 : 
            pa = 1 ;
            x_cord++; 
-          TDraw( r , yellow ) ;
+          TDraw( r , yellow , x_cord , y_cord ) ;
          break;
         
         case -1 :
           pa = -1 ; 
           x_cord--;
-          TDraw( r , yellow ) ;
+          TDraw( r , yellow , x_cord , y_cord ) ;
          break;
 
         case 2 : 
          pa = 2 ;
          x_cord++;
-          TDraw( r , yellow ) ;
+          TDraw( r , yellow , x_cord , y_cord ) ;
          x_cord -= 2 ; 
-          TDraw( r , yellow ) ;
+          TDraw( r , yellow , x_cord , y_cord ) ;
          break;
 
          case 0 : 
@@ -218,7 +219,7 @@ void Tracker::Movement_Direction ( SDL_Renderer * r   , int n  )
                     {
                       y_cord += op ;
                        x_cord += b ;
-                       TDraw ( r , yellow ) ;
+                       TDraw( r , yellow , x_cord , y_cord ) ;
                     }
 
                   }
@@ -234,7 +235,7 @@ void Tracker::Movement_Direction ( SDL_Renderer * r   , int n  )
          default : 
            pa = -2 ;
            y_cord -= tdir ;
-          DrawPause( r , yellow ) ;
+          TDraw( r , yellow , x_cord , y_cord ) ;
           break;
      }
 
@@ -251,37 +252,37 @@ void Tracker::ClearMoveFromBoard ( SDL_Renderer * r )
  switch ( pa )
  {
     case 1 :
-     DrawPause ( r , white ) ;
+     DrawPause ( r , white , x_cord , y_cord ) ;
      y_cord = temp_y ; 
      x_cord++; 
-     TDraw ( r , black ) ;
+     TDraw ( r , black , x_cord , y_cord ) ;
      break;
 
     case -1 :
-     DrawPause ( r , white ) ;
+     DrawPause ( r , white , x_cord , y_cord ) ;
      y_cord = temp_y ;
      x_cord--;
-     TDraw ( r , black ) ;
+     TDraw ( r , black , x_cord , y_cord ) ;
      break;
 
     case -2 : 
-     DrawPause( r , white ) ;
+     DrawPause( r , white , x_cord , y_cord ) ;
      break;
 
     case 2 : 
-      DrawPause ( r , white ) ;
+      DrawPause ( r , white , x_cord , y_cord ) ;
       y_cord = temp_y ;
       x_cord++ ;
-      TDraw( r , black ) ;
+      TDraw( r , black , x_cord , y_cord ) ;
       x_cord -= 2 ;
-      TDraw ( r , black ) ;
+      TDraw ( r , black , x_cord , y_cord ) ;
      break;
 
     case 0 :
            
            int b , op , fi ;
          
-           DrawPause ( r , white ) ;
+           DrawPause ( r , white , x_cord , y_cord ) ;
 
             for ( int i = 0  ; i <= 3 ; i++ )
             {
@@ -304,7 +305,7 @@ void Tracker::ClearMoveFromBoard ( SDL_Renderer * r )
                     {
                        y_cord += op ;
                        x_cord += b ;
-                       TDraw ( r , black ) ;
+                       TDraw ( r , black , x_cord , y_cord ) ;
                     }
 
                   }
@@ -404,3 +405,187 @@ bool Tracker::PossibleUpgrade( int y , int dir )
   return false ;
 }
 
+int Tracker::CheckDir( int x )
+{
+   if ( AllowedMove ( x + 1 ) && AllowedMove ( x - 1 ) )
+    return 2 ;
+   else if ( AllowedMove ( x + 1 ) )
+    return 1 ;
+   else if ( AllowedMove ( x - 1 ) )
+    return -1 ;
+   else
+    return 0 ;
+  
+   return 0 ;
+}
+
+
+int Tracker::EnemyTakePiece ( int x , int y , int direction , char id , cell temp_board[grid][grid] )
+{
+
+  int temp = y + direction ,
+      n_case = -1 ;
+
+  if ( direction != 0 && AllowedMove ( temp ) )
+  {
+    temp = x ;
+    x = ( AllowedMove ( x + 1 ) 
+        && AllowedMoveInBoard( temp_board , x + 1 , y ) == false 
+        && temp_board[y][x+1].c != id 
+        ? 2 : 0 ) ;
+
+    temp = ( AllowedMove( temp - 1 )
+           && AllowedMoveInBoard ( temp_board , temp - 1 , y ) == false 
+           && temp_board[y][temp-1].c != id
+          ? 1 : 0 ) ;
+
+    n_case = ( x + temp > 0 ? x + temp : -1 ) ;
+    return n_case ;
+  }
+  else
+  {
+     printf ( " later \n" ) ;
+     return n_case ;
+  }
+  
+
+
+  return n_case ;
+
+}
+
+bool Tracker::TakePiece_Cord ( Piece * temp_piece , int n , int &x , int &y )
+{
+
+
+  temp_piece += n ;
+
+  if ( temp_piece->alive )
+  {
+     x = CordCalcu ( x ) ;
+     y = CordCalcu ( y ) + temp_piece->Direction() ;
+     return AllowedMove ( y ) ;
+  }
+
+
+  return false ;
+}
+  
+cord * Tracker::ScanTeam_ForTakes ( cell temp_board[grid][grid] , Team * temp_team  )
+{
+ 
+
+   cord * current = nullptr ;
+   cord * last = nullptr ;
+
+   SDL_Rect temp_rect ;
+   int case_number , direction , x , y , tem ;
+   char id ;
+
+   for ( int i = 0 ; i < temp_team->pieces_left ; i++ )
+   {
+      id = temp_team->ID ;
+      direction = temp_team->Pieces[i].Direction() ;
+      temp_rect = temp_team->Pieces[i].PieceCord() ;
+      if ( TakePiece_Cord ( temp_team->Pieces , i , temp_rect.x , temp_rect.y ) )
+      {
+        x = temp_rect.x ;
+        y = temp_rect.y ;
+         case_number = EnemyTakePiece ( x , y , direction , id , temp_board ) ;
+         cord * temp_cord = new cord ;
+         switch ( case_number )
+         {
+
+           case 1 :
+            printf ( " case 1 \n" ) ;
+            y = y + direction ;
+            x = x - 2 ;
+             if ( AllowedMove ( x ) && AllowedMove ( y ) 
+                  && AllowedMoveInBoard ( temp_board , x , y )  )
+             {
+               temp_cord->x = x + 1 ;
+               temp_cord->y = y - direction  ;
+               temp_cord->x_parametre = 1 ;
+               temp_cord->next = nullptr ;
+               if (current == nullptr) 
+                {
+                  current = temp_cord;  
+                  last = temp_cord;
+                }
+               else 
+                {
+                  last->next = temp_cord;
+                  last = temp_cord;
+                }
+
+             }
+
+            break;
+
+           case 2 :
+            printf ( " case 2 \n" ) ;
+            y = y + direction ;
+            x = x + 2 ;
+             if ( AllowedMove ( x ) && AllowedMove ( y ) 
+                  && AllowedMoveInBoard ( temp_board , x , y )  )
+             {
+               temp_cord->x = x - 1 ;
+               temp_cord->y = y - direction  ;
+               temp_cord->x_parametre = 1 ;
+               temp_cord->next = nullptr ;
+               if (current == nullptr) 
+                {
+                  current = temp_cord;  
+                  last = temp_cord;
+                }
+               else 
+                {
+                  last->next = temp_cord;
+                  last = temp_cord;
+                }
+
+             }
+
+           break;
+          
+           case 3 :
+             printf ( " case 3 \n" ) ; 
+            tem = x - 2 ;
+            y = y + direction ;
+            x = x + 2 ;
+             if ( AllowedMove ( x ) && AllowedMove ( y ) 
+                  && AllowedMove ( tem )
+                  && AllowedMoveInBoard ( temp_board , x , y )  
+                  && AllowedMoveInBoard ( temp_board , tem , y ) )
+             {
+               temp_cord->x = x - 1 ;
+               temp_cord->y = y - direction  ;
+               temp_cord->x_parametre = 3 ;
+               temp_cord->next = nullptr ;
+               if (current == nullptr) 
+                {
+                  current = temp_cord;  
+                  last = temp_cord;
+                }
+               else 
+                {
+                  last->next = temp_cord;
+                  last = temp_cord;
+                }
+
+             }
+            break;
+            
+
+           default:
+            std:: cout << " piece number " << i << " dont have forced takes ! " << std:: endl ;
+             delete temp_cord ;
+            break;
+         }
+      }
+   }
+
+
+   return current ;
+  
+}
