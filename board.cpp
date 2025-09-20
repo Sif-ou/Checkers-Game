@@ -82,6 +82,8 @@ void board::SetTeam()
 
     TeamR->ID = 'r' ;
     TeamB->ID = 'b' ;
+    TeamR->pieces_left = 12 ;
+    TeamB->pieces_left = 12 ;
 
     PiecePlacment ( TeamR , 1 ) ;
     PiecePlacment ( TeamB , -1 ) ;
@@ -117,7 +119,7 @@ void board::PiecePlacment(  Team * Temp , int direction  )
 
                  if ( j % 2 == 1 )
                  {
-                    Temp->Pieces[co].InitPiece( j , i , Temp->ID , direction , Temp->ID ) ; 
+                    Temp->Pieces[co].InitPiece( j , i , Temp->ID , direction , Temp->ID , co ) ; 
                     BOARD[i][j].Set ( j , i , false , Temp->ID , co ) ;
                     co++ ;
                  }
@@ -129,7 +131,7 @@ void board::PiecePlacment(  Team * Temp , int direction  )
 
                   if ( j % 2 == 0 )
                   {
-                    Temp->Pieces[co].InitPiece( j , i , Temp->ID , direction , Temp->ID ) ;
+                    Temp->Pieces[co].InitPiece( j , i , Temp->ID , direction , Temp->ID , co ) ;
                     BOARD[i][j].Set ( j , i , false , Temp->ID , co ) ;
                     co++ ;
                   }
@@ -157,22 +159,36 @@ void board::Tracker_Board (  SDL_Renderer * r  )
 {
    px = track->x_cord ;
    py = track->y_cord ;
-    
-   if ( BOARD[track->y_cord][track->x_cord].c == 'r'  )
-      {
-        piece_clicked = true ;
-        track->DrawPause ( r , yellow ) ;
-        track->Possible_Movement ( r  , TeamR->Pieces , BOARD , BOARD[track->y_cord][track->x_cord].n ) ;
-      }
-        
-   else if ( BOARD[track->y_cord][track->x_cord].c == 'b'  )
-       {
-         piece_clicked = true ;
-         track->DrawPause ( r , yellow ) ;
-         track->Possible_Movement ( r  , TeamB->Pieces , BOARD , BOARD[track->y_cord][track->x_cord].n ) ;
-       }
-      else
-         piece_clicked = false ;
+   
+   switch ( turn )
+   {
+       case true :
+
+         if ( BOARD[track->y_cord][track->x_cord].c == 'r'  )
+           {
+             piece_clicked = true ;
+             DrawPause ( r , yellow , track->x_cord , track->y_cord  ) ;
+             track->Possible_Movement ( r  , TeamR->Pieces , BOARD , BOARD[track->y_cord][track->x_cord].n ) ;
+           }
+         else
+            piece_clicked = false ; 
+           
+       
+        break;
+
+       case false  :
+
+          if ( BOARD[track->y_cord][track->x_cord].c == 'b'  )
+          {
+            piece_clicked = true ;
+            DrawPause ( r , yellow , track->x_cord , track->y_cord ) ;
+            track->Possible_Movement ( r  , TeamB->Pieces , BOARD , BOARD[track->y_cord][track->x_cord].n ) ;
+          }
+          else
+           piece_clicked = false ;   
+        break;
+   }
+
       
 }
 bool board::ClickTracker( int x , int y )
@@ -245,5 +261,35 @@ int n ;
        BOARD[track->y_cord][track->x_cord].Set( track->x_cord , track->y_cord , false , 'b' , n ) ;
     } 
 
+
+}
+
+void board::NextTurn()
+{
+    if ( turn == false )
+     turn = true ; 
+    else
+     turn = false ;
+}
+
+
+void board::ShowPossibleTakes( SDL_Renderer * r )
+{
+   printf( " here !! \n" ) ;
+   take->DrawTakesPieces( r ) ;
+}
+
+void board::ForcedTakes()
+{
+
+    Team * temp_team = ( turn ? TeamR : TeamB ) ;
+
+    take->SetTakes( track->ScanTeam_ForTakes( BOARD , TeamR ) ) ;
+
+   std:: cout << " takes value : " << take->isTakeEmpty() << std:: endl ; 
+    if ( take->isTakeEmpty() )
+     forced = false ;
+    else
+     forced = true ;
 
 }
