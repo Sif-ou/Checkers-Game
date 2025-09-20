@@ -8,12 +8,14 @@ extern SDL_Color black;
 extern SDL_Color white;
 extern SDL_Color red;
 
+struct cord {
+
+    int x , y ;
+    int x_parametre ;
 
 
 
-struct part {
-
-    int w , h ;
+    struct cord * next ;
 
 };
 
@@ -45,22 +47,28 @@ struct cell {
 
 struct Team{
 
+
     char ID ;
+    int pieces_left ;
     Piece * Pieces = new  Piece [N] ; 
 
 };
+
 
 class Tracker{
 
     private :
 
       SDL_Rect track_rec ;
-      int pa = -3 ,
-          tdir = -3 ,
+      int tdir = -3 ,
           tx = -1 ,
-          ty = -1 ;
-      SDL_Surface * sur = nullptr ;
+          ty = -1 ,
+          tpa ;
       int fly[4] =  { -1 , -1 , -1 , -1 } ;
+
+      cord * ForecedTakeSaver = nullptr ;
+
+
     public : // track the excact piece 
       
       void TrackPieceCord ( int &x , int &y ) ;
@@ -72,18 +80,18 @@ class Tracker{
       int x_cord ,
           y_cord ;
 
-      int CordCalcu ( int x ) ;
+      int pa = -3 ;
+
+      
+
       void Possible_Movement(  SDL_Renderer * r   , Piece * temp_Piece , cell temp_board[grid][grid] , int n ) ;
       void Movement_Direction ( SDL_Renderer * r   , int n ) ;
       void ShowMovement ( SDL_Renderer * r  ,cell temp_board [grid][grid] ) ;
 
-      bool AllowedMove ( int n ) ;
-      bool AllowedMoveInBoard ( cell temp[grid][grid] , int x , int y ) ;
+    
       bool CorrectCord () ;
       void ClearMoveFromBoard ( SDL_Renderer * r ) ;
-      void TDraw ( SDL_Renderer * r , SDL_Color color ) ;
       void DefaultTrack () ;
-      void DrawPause( SDL_Renderer * r , SDL_Color color ) ;
 
       bool PossibleUpgrade ( int y , int dir ) ;
 
@@ -93,7 +101,21 @@ class Tracker{
 
       void HandleFly ( cell  temp_board [grid][grid] ) ;
 
+      void VerfieTakeCondPiece (  Team * temp_team , cell  temp_board [grid][grid] ) ;
 
-      /*void Case2Move( SDL_Renderer * r , SDL_Color color ) ;*/
+      bool ForcedTake ( Piece * temp_piece , cell  temp_board [grid][grid] , int n ) ;
+      bool CorrectTake ( cell temp_board [grid][grid] , int x , int y , char id ) ;
+      int CheckDir( int x ) ;
+
+      cord * ScanTeam_ForTakes ( cell temp_board[grid][grid] , Team * temp_team  ) ;
+      bool TakePiece_Cord ( Piece * temp_piece , int n , int &x , int &y ) ;
+      int EnemyTakePiece ( int x , int y , int direction , char id ,cell temp_board[grid][grid] ) ;
       
 };
+
+int CordCalcu ( int x ) ;
+bool AllowedMove ( int n ) ;
+bool AllowedMoveInBoard ( cell temp[grid][grid] , int x , int y ) ;
+void DrawPause( SDL_Renderer * r , SDL_Color color , int x , int y ) ;
+void TDraw ( SDL_Renderer * r , SDL_Color color , int x , int y ) ;
+
