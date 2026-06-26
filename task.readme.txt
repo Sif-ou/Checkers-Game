@@ -1,0 +1,15 @@
+
+bugs :
+- can't detecte takes properly ( see red dote in game.cpp ) 
+##############
+
+
+
+maybe i will do : 
+=> image in the exe file 
+=> save game progress 
+=> sounds
+=> score 
+=> enter/display player name
+=> save players names
+=> Ai with difficulty
