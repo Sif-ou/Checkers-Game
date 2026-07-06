@@ -1,6 +1,6 @@
 
 bugs :
-- can't detecte takes properly ( see red dote in game.cpp ) 
+
 ##############
 
 

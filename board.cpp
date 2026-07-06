@@ -254,37 +254,45 @@ void BOARD::ChangePiece_Cords ( Cordinates * piece_cord , Cordinates * Change_co
 
 }
 
-void BOARD::ChangePiece_TakeCords ( Cordinates Change_cord , int direction , char id  ) 
+void BOARD::ChangePiece_TakeCords ( Cordinates curr_cord , Cordinates opp_cord , Cordinates Change_cord , int direction , char id   ) 
 {
-    Team * temp_team = ( id == TeamR->id ? TeamR : TeamB ) , 
-         * temp_team_opp = ( temp_team == TeamR ? TeamB : TeamR ) ;
+   // Team * temp_team = ( id == TeamR->id ? TeamR : TeamB ) , 
+    //     * temp_team_opp = ( temp_team == TeamR ? TeamB : TeamR ) ;
 
-    int y = Change_cord.y ;
-    Change_cord.y -= 2 * temp_team->direction ;
+   // int y = Change_cord.y ;
+   // Change_cord.y -= 2 * temp_team->direction ;
 
-    int curr_num = borad[Change_cord.y][Change_cord.x].num , 
-        opp_num ;
-    
-        printf ( " case %d " , direction ) ;
-    switch ( direction )
+   // int curr_num = borad[Change_cord.y][Change_cord.x].num , 
+     //   opp_num ;
+   
+     
+     printf ( " here is cords (x , y)=> %d , %d \n" , Change_cord.x , Change_cord.y ) ;
+     printf ( " id => %c  \n" , id ) ;
+    printf ( " case %d \n" , direction ) ;
+    printf ( " we reached this far ! \n" ) ;
+   
+   
+    /*switch ( direction )
     {
         case 1 :
-           
+           printf ( " we reached this far ! \n" ) ;
           opp_num = borad[ Change_cord.y + temp_team->direction ][ Change_cord.x + direction_move_1 ].num ;
           borad[ Change_cord.y + temp_team->direction ][ Change_cord.x + direction_move_1 ].Default() ;
           Change_cord.x += 2 * direction_move_1 ; 
          break;
         
         case 2 :
+        printf ( " we reached this far ! \n" ) ;
          printf ( " enemy piece => %d , %d \n" , Change_cord.y+ temp_team->direction , Change_cord.x + direction_move_1 ) ;
          printf( " board state => %d , %d \n " , borad[ Change_cord.y + temp_team->direction ][ Change_cord.x + direction_move_1 ].empty , borad[ Change_cord.y + temp_team->direction ][ Change_cord.x + direction_move_1 ].num ) ;
    
-          /*opp_num = borad[ Change_cord.y + temp_team->direction ][ Change_cord.x + direction_move__1 ].num ;
-          Change_cord.x += 2 * direction_move__1 ;*/
-         break;
-    }
 
-     Change_cord.y = y ; 
+         break;
+    }*/
+
+              /*opp_num = borad[ Change_cord.y + temp_team->direction ][ Change_cord.x + direction_move__1 ].num ;
+          Change_cord.x += 2 * direction_move__1 ;*/
+    /* Change_cord.y = y ; 
 
           temp_team_opp->Pieces[opp_num]->KillPiece() ;
           temp_team_opp->Num_Of_Pieces-- ;
@@ -293,12 +301,13 @@ void BOARD::ChangePiece_TakeCords ( Cordinates Change_cord , int direction , cha
      ChangePiece_Cords ( &temp , &Change_cord , temp_team->id ) ;  
      
      
+    
      printf ( " R / B <=> %d / %d \n " , temp_team->Num_Of_Pieces , temp_team_opp->Num_Of_Pieces ) ;
 
      temp_team = nullptr ;
      temp_team_opp = nullptr ;
      delete ( temp_team ) ;
-     delete ( temp_team_opp ) ;
+     delete ( temp_team_opp ) ;*/
 
 }
 

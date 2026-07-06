@@ -128,12 +128,14 @@ bool Movement::MoveCLicked ( Cordinates temp_cords )
     return r ;
 }
 
-void Movement::TakeMove ( Cordinates change_cord , int direction , SDL_Renderer * r , SDL_Texture * t)
+void Movement::TakeMove (  Cordinates change_cord , int direction , SDL_Renderer * r , SDL_Texture * t )
 {
 
   y = change_cord.y ;
 
 
+ // printf ( "here TakeMove func ===> %d \n " , direction ) ;
+ // printf ( " here is 'TakeMove' func => %d \n" , direction ) ;
   switch ( direction )
   {
      case 1 :
@@ -145,7 +147,7 @@ void Movement::TakeMove ( Cordinates change_cord , int direction , SDL_Renderer 
       move_case = 2 ;
       break;
      case 3 :
-     x1 = change_cord.x + 2 * direction_move_1 ;
+      x1 = change_cord.x + 2 * direction_move_1 ;
       x2 = change_cord.x + 2 * direction_move__1 ;
       move_case  = 3 ;
       break;
@@ -155,6 +157,7 @@ void Movement::TakeMove ( Cordinates change_cord , int direction , SDL_Renderer 
      break;   
   }
 
+   //printf ( " here is 'TakeMove' func => %d \n" , move_case ) ;
    Move_Draw ( r , t ) ;
 
 
@@ -190,25 +193,52 @@ void Movement::TakeMove ( Cordinates change_cord , int direction , SDL_Renderer 
 
 bool Movement::TakeMove_Clicked ( Cordinates temp )
 {
+
+
+
+   //printf( " test 'move_case' result => %d \n " , move_case ) ; 
+   bool r = false ;
+
    switch ( move_case )
    {
       case 0 :
         printf ( " still w8 king !!!!! \n " ) ;
-         return false ;
        break;
 
-     default : 
-       direction = ( temp.x == curr_cords.x + ( direction_move_1 * 2 ) ? direction_move_1 : direction_move__1 ) ;
-       if ( temp.y == curr_cords.y && 
-            ( temp.x == curr_cords.x + ( direction_move_1 * 2 ) || temp.x == curr_cords.x + ( direction_move__1 * 2 ) ) )
-            return true ;
-      break;
+
+
+      case 1 : 
+
+        r = ( temp.x == x1 && temp.y == y ? true : false ) ;
+
+       break;
+
+
+      case 2 : 
+
+        r = ( temp.x == x2 && temp.y == y ? true : false ) ;
+
+       break; 
+
+      
+      case 3 : 
+
+        r = ( ( temp.x == x1 || temp.x == x2 ) && temp.y == y ? true : false ) ;
+
+       break; 
+
+      default :
+        Reset_Move() ;
+       break;
+
    }
 
-  return false ;
+
+  //printf( " direction from movement => %d \n " , this->direction ) ; 
+  return r ;
 }
 
 int Movement::getTakeDirection ()
 {
-  return direction ;
+  return this->direction ;
 }

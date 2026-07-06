@@ -99,10 +99,29 @@ void GAME::BoardUpdate ()
   }
   else 
   {
+
+    if ( movement->TakeMove_Clicked( track->GetTrack_Cord() ) )
+    {
+      int n = track->getTakeNum() ;
+      printf ( " here num from take it SELF => %d \n " , n ) ;
+      printf ( " here direction from take it SELF => %d \n " , take->getDirection(n) ) ;
+      board->ChangePiece_TakeCords ( take->getCord( n ) , take->getEnemyCord( n ) ,
+                                     take->getChangeCord( n ) ,take->getDirection( n ) , turn ) ;
+      movement->Reset_Move() ;
+    }
+    else
+    {
+
      if ( track->isTakePiece( take->getTakeList() ) == false )
        track->ForcedTake( take->getTakeList() , renderer , texture ) ; 
      else
-      movement->TakeMove ( take->getChangeCord( track->getTakeNum() ) , take->getDirection( track->getTakeNum() ) , renderer , texture ) ;
+      {
+        track->Focus_Draw( renderer , texture );
+        movement->TakeMove ( take->getChangeCord( track->getTakeNum() ) , take->getDirection( track->getTakeNum() ) , renderer , texture ) ;
+      }
+
+    }
+
      
 
   }
@@ -137,6 +156,7 @@ void GAME::Event()
              switch ( event.key.keysym.scancode )
              {
                  case SDL_SCANCODE_I :
+
                    cell (&t) [GRID][GRID] = board->getBoard() ;
                    for ( int i = 0 ; i <= TGRID ; i++ )
                    {
@@ -149,6 +169,8 @@ void GAME::Event()
                    }
                    Cordinates p = track->GetTrack_Cord() ;
                    printf ( "\n cords %d/%d \n ", p.x , p.y ) ;
+
+                  take->TestFunc() ;
                   break;
              }
              
@@ -157,6 +179,23 @@ void GAME::Event()
     }
 
 }
+/*
+                   cell (&t) [GRID][GRID] = board->getBoard() ;
+                   for ( int i = 0 ; i <= TGRID ; i++ )
+                   {
+                    printf( "\n" ) ;
+
+                    for ( int j = 0 ; j <= TGRID ; j++ )        
+                    std:: cout << "|" << t[i][j].num  << "|" ;  
+                    //printf ( "|%d|" , board->borad[i][j].id ) ;
+
+                   }
+                   Cordinates p = track->GetTrack_Cord() ;
+                   printf ( "\n cords %d/%d \n ", p.x , p.y ) ;
+
+*/
+
+
 
 void GAME::Leave()
 {
