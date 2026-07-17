@@ -283,7 +283,7 @@ void BOARD::ChangePiece_Cords ( Cordinates * piece_cord , Cordinates * Change_co
 
 }
 
-void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cord , Cordinates opp_cord , Cordinates Change_cord , int direction , char id   ) 
+void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cord , Cordinates opp_cord , Cordinates Change_cord , int * array , int direction , char id   ) 
 {
     Team * temp_team = ( id == TeamR->id ? TeamR : TeamB ) , 
          * temp_team_opp = ( temp_team == TeamR ? TeamB : TeamR ) ;
@@ -293,15 +293,32 @@ void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cor
       curr_num =  borad[curr_cord.y][curr_cord.x].num ,
       opp_num ;
 
+      bool let_change = false ;
 
       switch (direction)
       {
+
+        case 0 : 
+
+        if ( array != nullptr )
+        {
+          
+            Change_cord.x +=  array[0] * array[2]  ;
+            Change_cord.y +=  array[1] * array[2]  ;
+            
+            opp_cord.x +=  (array[0] * array[2]) - ( 1 * array[0] )  ;
+            opp_cord.y +=  (array[1] * array[2]) - ( 1 * array[1] )  ;
+            let_change = true ;
+        }
+         
+         break;
+
 
        case 1 :
        
        Change_cord.x += 2 ;
        opp_cord.x += direction_move_1 ;
-
+       let_change = true ;
 
         break;
       
@@ -309,7 +326,7 @@ void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cor
 
        Change_cord.x -= 2 ;
        opp_cord.x += direction_move__1 ;
-
+       let_change = true ;
 
         break;
 
@@ -324,6 +341,7 @@ void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cor
             opp_cord.x -= 2 ;
         }
 
+        let_change = true ;
 
         break;
 
@@ -331,45 +349,47 @@ void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cor
 
 
 
+    if ( let_change )
+    {
 
-  if ( temp_team->Pieces[curr_num]->GetDirection() != UPGRADE_PIECE_DIRECTION )
-   {
+      if ( temp_team->Pieces[curr_num]->GetDirection() != UPGRADE_PIECE_DIRECTION )
+       {
+    
+         if ( id == 'r' )
+         {
+            if ( Change_cord.y == UPGRADE_PIECE_DIRECTION )
+             temp_team->Pieces[curr_num]->KingUpgrade() ;
+         }
+         else
+         {
+             if ( Change_cord.y == TGRID )
+              temp_team->Pieces[curr_num]->KingUpgrade() ;
+         }
+    
+       }
+    
+           opp_num = borad[opp_cord.y][opp_cord.x].num ;
+    
+           /* changing the piece place & updating in board */
+           borad[curr_cord.y][curr_cord.x].Default() ;
+           temp_team->Pieces[curr_num]->SetCordinates( Change_cord ) ;
+           borad[Change_cord.y][Change_cord.x].SetCell ( Change_cord , id , curr_num ) ;
+    
+    
+    
+    
+           /* killing piece & updating board */
+           borad[opp_cord.y][opp_cord.x].Default() ;
+           temp_team->Num_Of_Pieces-- ;
+           temp_team_opp->Pieces[opp_num]->KillPiece() ;
+    
+    
+           temp_team = nullptr ;
+           temp_team_opp = nullptr ;
+    
+    }
 
-     if ( id == 'r' )
-     {
-        if ( Change_cord.y == UPGRADE_PIECE_DIRECTION )
-         temp_team->Pieces[curr_num]->KingUpgrade() ;
-     }
-     else
-     {
-         if ( Change_cord.y == TGRID )
-          temp_team->Pieces[curr_num]->KingUpgrade() ;
-     }
 
-   }
-
-
-
-
-       opp_num = borad[opp_cord.y][opp_cord.x].num ;
-
-
-       /* changing the piece place & updating in board */
-       borad[curr_cord.y][curr_cord.x].Default() ;
-       temp_team->Pieces[curr_num]->SetCordinates( Change_cord ) ;
-       borad[Change_cord.y][Change_cord.x].SetCell ( Change_cord , id , curr_num ) ;
-
-
-
-
-       /* killing piece & updating board */
-       borad[opp_cord.y][opp_cord.x].Default() ;
-       temp_team->Num_Of_Pieces-- ;
-       temp_team_opp->Pieces[opp_num]->KillPiece() ;
-
-
-       temp_team = nullptr ;
-       temp_team_opp = nullptr ;
 
 }
 
@@ -380,77 +400,3 @@ Team* BOARD::GetTeam( char id )
    else 
     return TeamB ;
 }
-
-/*
-int BOARD::Move_CaseNum ( int direction )
-{
-    int co = -1 ;
-
-    int move_y = current_y + direction ,
-        x_left = current_x + direction_move__1 ,// x -1 
-        x_right = current_x + direction_move_1 ; // x + 1 
-    
-
-        switch ( direction )
-        {
-            case 0 :
-             break; 
-
-            default :
-              if ( borad[move_y][current_x].empty == false )
-               {
-                co = ( borad[move_y][x_left].empty == false ?  1 : -1 ) ;
-                co = ( borad[move_y][x_right].empty == false ? 2 : co ) ;
-               }
-             break;
-
-        }
-
-    return co ;
-}
-
-bool BOARD::AllowPiece_Move ()
-{
-    int num = borad[current_y][current_x].num ;
-        current_direction = -1 ;
-    char * temp_id =  borad[current_y][current_x].id ; 
-
-    Team * temp_team = ( *temp_id == 'r' ? TeamR : TeamB ) ;
-
-    current_direction = temp_team->Pieces[num]->GetDirection() ;
-    move_case = Move_CaseNum( current_direction ) ;
-    
-     return ( move_case == -1 ? false : true ) ;
-}
-
-void BOARD::RenderMove ( SDL_Renderer * r , SDL_Texture * t )
-{
-    board_surface = IMG_Load ( "assets/move.png") ;
-
-    switch ( move_case )
-    {
-        case 1 : 
-            current_x--;
-            current_y += current_direction ; 
-            Cordinates temp_crod ;
-            temp_crod.x = current_x ;
-            temp_crod.y = current_y ;
-
-            temp_crod = Draw_Cord ( temp_crod ) ;
-            SDL_Rect temp_rect = Cords_Into_Rect ( temp_rect , temp_crod ) ;
-            t = SDL_CreateTextureFromSurface ( r , board_surface ) ;
-            SDL_RenderCopy ( r , t , &MoveRect_img , NULL ) ;
-         break;
-        case 2 : 
-
-         
-         break;
-
-         default : 
-         break;
-    }
-
-    SDL_FreeSurface ( board_surface ) ;
-}
-
-*/

@@ -15,11 +15,16 @@ void TakeDirection::Default()
          right = 0 ;
 
 
-         top_left = false ; 
-         top_right = false ; 
-         bottom_left = false ;
-         bottom_right = false ;
+         this->top_left = false ; 
+         this->top_right = false ; 
+         this->bottom_left = false ;
+         this->bottom_right = false ;
 
+         for ( int i = 0 ; i <= 3 ; i++ )
+          {
+            change_cord_king[i].x = direction_move__1 ;
+            change_cord_king[i].y = direction_move__1 ;
+          } 
          
 }
 
@@ -29,6 +34,22 @@ void TakeDirection::SetTake ( Cordinates cords , Cordinates opp_cord , Cordinate
         this->cords = cords ;
         this->opp_cord = opp_cord ;
         this->change_cord = change_cord ;
+}
+
+
+void TakeDirection::setKingTake ( Cordinates t1 , Cordinates t3 , Cordinates t4 , Cordinates t2 )
+{
+    change_cord_king[0] = t1 ;
+    change_cord_king[1] = t3 ;
+    change_cord_king[2] = t4 ;
+    change_cord_king[3] = t2 ; 
+    
+           /*printf ( " SET SHIT BABY !! \n " 
+                   " x1 ==> %d \n " 
+                   " x3 ==> %d \n " 
+                   " x4 ==> %d \n " 
+                   " x2 ==> %d \n " , change_cord_king[0].x , change_cord_king[1].x , change_cord_king[2].x , change_cord_king[3].x ) ;  */
+
 }
 
 
@@ -58,27 +79,30 @@ void TakeDirection::SetDirectionKing ( bool top_left , bool top_right , bool bot
 }
 
 
-
-
-
-
 int TakeDirection::getDirection()
 {
+        
+    if ( !bottom_left && !bottom_right && !top_left && !top_right )
+     {
         int n = ( right == true ? direction_move_1 : UPGRADE_PIECE_DIRECTION ) ;
-
         n = (  left == true ? n+2: n ) ;
+         return n ;
+     }
+    else
+    {
+        return UPGRADE_PIECE_DIRECTION ;
+    }
 
-        return n ;
+    return direction_move__1 ;
+
 }
 
 
-
-int TakeDirection::getDirectionKing () 
+Cordinates* TakeDirection::getKingDirections() 
 {
-    if ( bottom_left || bottom_right || top_left || top_right )
-     return UPGRADE_PIECE_DIRECTION ;
 
-    return direction_move__1 ;
+    return change_cord_king ;
+    
 }
 
 
@@ -149,9 +173,18 @@ int Take::getDirection ( int num )
 
 }
 
+Cordinates* Take::getKingTakes( int num ) 
+{
+ 
+    for (auto& take : take_list ) 
+     if ( take.GetNum() == num )
+      return take.getKingDirections() ;
+
+    return nullptr ;
+    
+} 
 
 
-// TODO SIFOU : WE ARE HERE 
 void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
 {
      
@@ -170,6 +203,7 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
       { 
 
         //printf( " inside the loop wiht i => %d \n" , i ) ;
+       take_elemnt.Default() ;
        temp_cord = temp_team->Pieces[i]->GetCordinates() ;
        y = temp_cord.y + temp_team->direction ;
        x1 = temp_cord.x ;
@@ -239,7 +273,7 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
        else if ( temp_team->Pieces[i]->GetDirection() == 0 )
        {
         
-        
+          take_elemnt.Default() ;
           temp_cord = temp_team->Pieces[i]->GetCordinates() ;
           y = temp_cord.y ;
           int y1 = y ;
@@ -255,6 +289,13 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
                bottom_left_blocked = false ,
                bottom_right_blocked = false ;
 
+          
+         Cordinates temp1 , temp2 , temp3 , temp4 ;
+          
+          temp1.x = direction_move__1 ; temp1.y = direction_move__1 ;
+          temp2.x = direction_move__1 ; temp2.y = direction_move__1 ;
+          temp4.x = direction_move__1 ; temp4.y = direction_move__1 ;
+          temp3.x = direction_move__1 ; temp3.y = direction_move__1 ;
           
           while ( 1 )
           { 
@@ -285,7 +326,10 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
                           const int _y = y + direction_move__1;
                           const int _x = x1 + direction_move__1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              top_left = true;
+                             
+                             temp1.x = _x ;
+                             temp1.y = _y ;
+                             top_left = true;
                           }
                       }
                   }
@@ -308,7 +352,9 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
                           const int _y = y + direction_move__1;
                           const int _x = x3 + direction_move_1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              top_right = true;
+                             temp3.x = _x ;
+                             temp3.y = _y ;
+                             top_right = true;
                           }
                       }
                   }
@@ -332,7 +378,10 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
                           const int _y = y1 + direction_move_1;
                           const int _x = x4 + direction_move__1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              bottom_left = true;
+                             
+                             temp4.x = _x ;
+                             temp4.y = _y ;
+                             bottom_left = true;
                           }
                       }
                   }
@@ -355,7 +404,9 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
                           const int _y = y1 + direction_move_1;
                           const int _x = x2 + direction_move_1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              bottom_right = true;
+                             temp2.x = _x ;
+                             temp2.y = _y ;  
+                             bottom_right = true;
                           }
                       }
                   }
@@ -372,6 +423,8 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
 
           if ( top_left || top_right || bottom_left || bottom_right  )
           {
+            take_elemnt.SetTake ( temp_cord , temp_cord , temp_cord ) ;
+            take_elemnt.setKingTake ( temp1 , temp3 , temp4 , temp2 ) ;
             take_elemnt.SetDirectionKing ( top_left , top_right , bottom_left , bottom_right ) ;
             take_elemnt.SetTakeInfo ( i ) ;
             take_elemnt.SetTake ( temp_cord , temp_cord , temp_cord ) ;
@@ -464,6 +517,13 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
        else if ( temp_team->Pieces[peice_num]->GetDirection() == 0 )
        {
         
+         Cordinates temp1 , temp2 , temp3 , temp4 ;
+          
+          temp1.x = direction_move_1 ; temp1.y = direction_move__1 ;
+          temp2.x = direction_move_1 ; temp2.y = direction_move__1 ;
+          temp3.x = direction_move_1 ; temp3.y = direction_move__1 ;
+          temp4.x = direction_move_1 ; temp4.y = direction_move__1 ;
+
           temp_cord = temp_team->Pieces[peice_num]->GetCordinates() ;
           y = temp_cord.y ;
           int y1 = y ;
@@ -509,7 +569,9 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _y = y + direction_move__1;
                           const int _x = x1 + direction_move__1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              top_left = true;
+                             temp1.x = _x ;
+                             temp1.y = _y ; 
+                             top_left = true;
                           }
                       }
                   }
@@ -532,7 +594,9 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _y = y + direction_move__1;
                           const int _x = x3 + direction_move_1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              top_right = true;
+                             temp3.x = _x ;
+                             temp3.y = _y ; 
+                             top_right = true;
                           }
                       }
                   }
@@ -556,7 +620,9 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _y = y1 + direction_move_1;
                           const int _x = x4 + direction_move__1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              bottom_left = true;
+                             temp4.x = _x ;
+                             temp4.y = _y ; 
+                             bottom_left = true;
                           }
                       }
                   }
@@ -579,7 +645,9 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _y = y1 + direction_move_1;
                           const int _x = x2 + direction_move_1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
-                              bottom_right = true;
+                             temp2.x = _x ;
+                             temp2.y = _y ; 
+                             bottom_right = true;
                           }
                       }
                   }
@@ -596,6 +664,8 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
 
           if ( top_left || top_right || bottom_left || bottom_right  )
           {
+            take_elemnt.SetTake ( temp_cord , temp_cord , temp_cord ) ;
+            take_elemnt.setKingTake ( temp1 , temp3 , temp4 , temp2 ) ;
             take_elemnt.SetDirectionKing ( top_left , top_right , bottom_left , bottom_right ) ;
             take_elemnt.SetTakeInfo ( peice_num ) ;
             take_elemnt.SetTake ( temp_cord , temp_cord , temp_cord ) ;
