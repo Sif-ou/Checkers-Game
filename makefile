@@ -4,7 +4,7 @@
 
 # === Compiler and flags ===
 CXX       = g++
-CXXFLAGS  = -I src/include -L src/lib
+CXXFLAGS  = -g -I src/include -L src/lib
 LIBS      = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
 SRC       = main.cpp  game.cpp board.cpp track.cpp Movement.cpp piece.cpp take.cpp struct.cpp
 OBJDIR    = obj

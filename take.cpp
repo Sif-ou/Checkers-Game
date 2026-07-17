@@ -13,8 +13,13 @@ void TakeDirection::Default()
 
          left = 0 ;
          right = 0 ;
-         top = 0 ;
-         bottom  = 0 ;
+
+
+         top_left = false ; 
+         top_right = false ; 
+         bottom_left = false ;
+         bottom_right = false ;
+
          
 }
 
@@ -42,12 +47,14 @@ void TakeDirection::SetDirection ( bool right ,  bool left )
 }
 
 
-void TakeDirection::SetDirectionKing ( bool right , bool left , bool top , bool bottom )
+void TakeDirection::SetDirectionKing ( bool top_left , bool top_right , bool bottom_left , bool bottom_right  )
 {
-    this->right = right ;
-    this->left = left ;
-    this->top = top ;
-    this->bottom = bottom ;
+
+         this->top_left = top_left ; 
+         this->top_right = top_right ; 
+         this->bottom_left = bottom_left ;
+         this->bottom_right = bottom_right ;
+
 }
 
 
@@ -64,6 +71,15 @@ int TakeDirection::getDirection()
         return n ;
 }
 
+
+
+int TakeDirection::getDirectionKing () 
+{
+    if ( bottom_left || bottom_right || top_left || top_right )
+     return UPGRADE_PIECE_DIRECTION ;
+
+    return direction_move__1 ;
+}
 
 
 Cordinates TakeDirection::GetCords ()  { return cords ; } 
@@ -135,73 +151,7 @@ int Take::getDirection ( int num )
 
 
 
-void Take:: ScanPiece ( cell (&board)[GRID][GRID] , Team * temp_team , int num ) 
-{
-
-   /* ResetTakes() ;
-
-    Cordinates piece_cord , opp_cord ;
-    TakeDirection take_element ;
-
-    int y , x1 , x2 ;
-
-         piece_cord = temp_team->Pieces[num]->GetCordinates() ;
-
-         switch ( temp_team->Pieces[num]->GetDirection() )
-         {
-            case 0 :
-             break;
-
-            default :
-
-             y = ( AllowMove( piece_cord.y , temp_team->direction ) 
-                  ? piece_cord.y + temp_team->direction : direction_move__1 ) ;
-
-             if ( y != direction_move__1 )
-             {
-                 x1 = piece_cord.x + direction_move_1 ;
-                 x2 = piece_cord.x + direction_move__1 ;
-
-                 x1 = ( AllowValue ( piece_cord.x ) &&  
-                       ( board[y][x1].empty == false && board[y][x1].id != temp_team->id )
-                        ? x1 : -1  
-                      ) ;
-
-                 x2 = ( AllowValue ( piece_cord.x ) && 
-                        ( board[y][x2].empty == false && board[y][x2].id != temp_team->id )
-                        ? x2 : -1  
-                      ) ;
-                 if ( ( x1 != direction_move__1 || x2 != direction_move__1 ) && AllowMove ( y , temp_team->direction ) )
-                 {
-                    opp_cord.SetCord( piece_cord.x , y ) ;
-
-                    y += temp_team->direction ;
-                    int temp_direction , direction1 , direction2 ;
-
-                    direction1 = ( AllowMove( x1 , direction_move_1 ) && board[y][x1 + direction_move_1 ].empty 
-                                   ? direction_move_1 : UPGRADE_PIECE_DIRECTION );
-                    direction2 = ( AllowMove( x2 , direction_move__1 ) && board[y][x2 + direction_move__1 ].empty 
-                                   ? 2 : UPGRADE_PIECE_DIRECTION );
-                    temp_direction = direction1 + direction2 ;
-                    take_element.SetTake( piece_cord , opp_cord , temp_direction ) ;
-                
-
-
-                    if ( temp_direction != 0 )
-                        take_list.push_back( take_element ) ;
-                    
-                 }
-             }
-
-             break;
- 
-         }*/
-
-}
-
-
-
-
+// TODO SIFOU : WE ARE HERE 
 void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
 {
      
@@ -213,10 +163,13 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
      int y = 0 , x1 = 0 , x2 = 0 , x3 = 0  , x4 = 0  ;
 
 
-    for ( int i = 0 ; i < NUMBER_OF_PIECES ; i++ )    // <---- ' NUMBER_OF_PIECES ' is no good , replace with current_number_of_pieces 
+
+
+    for ( int i = 0 ; i < NUMBER_OF_PIECES ; i++ )    
       if ( temp_team->Pieces[i]->isAlive() )          //       that track how many pices left in the board                                
       { 
 
+        //printf( " inside the loop wiht i => %d \n" , i ) ;
        temp_cord = temp_team->Pieces[i]->GetCordinates() ;
        y = temp_cord.y + temp_team->direction ;
        x1 = temp_cord.x ;
@@ -256,12 +209,241 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
 
                   
 
+           // printf( " reached this far \n") ;
             Cordinates temp_cord2 ;
             temp_cord2.y = y ;
             temp_cord2.x = temp_cord.x ;
             
              take_elemnt.SetTake ( temp_cord , temp_cord1 , temp_cord2 ) ;
              take_elemnt.SetTakeInfo ( i ) ;
+
+            bool left = ( x2 != direction_move__1 ? true : false ) , 
+                 right = ( x1 != direction_move__1 ? true : false ) ;
+
+            //printf( " checking right and left shit  \n") ;
+             if ( left || right )
+             {
+                 //printf ( " we reached here \n" ) ;
+                 take_elemnt.SetDirection( right , left ) ;
+                 take_list.push_back ( take_elemnt ) ;
+             }
+
+             //printf( " is it empty man ? ===> %d \n " , isTakeEmpty() ) ;
+
+             // printf ( " ==> %d , %d \n " , left , right ) ;
+
+
+          }
+       }   
+       
+       else if ( temp_team->Pieces[i]->GetDirection() == 0 )
+       {
+        
+        
+          temp_cord = temp_team->Pieces[i]->GetCordinates() ;
+          y = temp_cord.y ;
+          int y1 = y ;
+          x1 = temp_cord.x ;
+          x2 = x1 ;
+
+          int x3 = x1 , x4 = x1 ;
+          
+          bool top_left = false, top_right = false, bottom_left = false, bottom_right = false;
+          
+          bool top_left_blocked = false ,
+               top_right_blocked = false ,
+               bottom_left_blocked = false ,
+               bottom_right_blocked = false ;
+
+          
+          while ( 1 )
+          { 
+
+              y += direction_move__1 ;
+              y1 += direction_move_1 ;
+
+              x1 += direction_move__1 ;
+              x2 += direction_move_1 ;
+              x3 += direction_move_1 ; 
+              x4 += direction_move__1 ;
+
+              if (!AllowValue(y) && !AllowValue(y1) ) {
+                  break;
+              }
+          
+              if (!top_left_blocked) 
+              {
+                  if (!AllowValue(x1)) {
+                      top_left_blocked = true;
+                  }
+                  else if (!board[y][x1].empty) 
+                  {
+                      top_left_blocked = true; 
+          
+                      if (board[y][x1].id != temp_team->id) 
+                      {
+                          const int _y = y + direction_move__1;
+                          const int _x = x1 + direction_move__1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              top_left = true;
+                          }
+                      }
+                  }
+              }
+          
+
+              if (!top_right_blocked ) 
+              {
+
+                  if (!AllowValue(x3)) {
+                      top_right_blocked = true;
+                  }
+
+                  else if (!board[y][x3].empty ) 
+                  {
+                      top_right_blocked = true; 
+          
+                      if (board[y][x3].id != temp_team->id) 
+                      {
+                          const int _y = y + direction_move__1;
+                          const int _x = x3 + direction_move_1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              top_right = true;
+                          }
+                      }
+                  }
+
+              }
+          
+
+
+
+              if (!bottom_left_blocked) 
+              {
+                  if (!AllowValue(x4)) {
+                      bottom_left_blocked = true;
+                  }
+                  else if (!board[y1][x4].empty) 
+                  {
+                      bottom_left_blocked = true; 
+          
+                      if (board[y1][x4].id != temp_team->id) 
+                      {
+                          const int _y = y1 + direction_move_1;
+                          const int _x = x4 + direction_move__1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              bottom_left = true;
+                          }
+                      }
+                  }
+              }
+          
+
+              if (!bottom_right_blocked ) 
+              {
+
+                  if (!AllowValue(x2)) {
+                      bottom_right_blocked = true;
+                  }
+
+                  else if (!board[y1][x2].empty ) 
+                  {
+                      bottom_right_blocked = true; 
+          
+                      if (board[y1][x2].id != temp_team->id) 
+                      {
+                          const int _y = y1 + direction_move_1;
+                          const int _x = x2 + direction_move_1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              bottom_right = true;
+                          }
+                      }
+                  }
+
+              }
+          
+
+              if ( top_left_blocked && top_right_blocked && bottom_left_blocked && bottom_right_blocked ) {
+                  break;
+              }
+          }
+
+          
+
+          if ( top_left || top_right || bottom_left || bottom_right  )
+          {
+            take_elemnt.SetDirectionKing ( top_left , top_right , bottom_left , bottom_right ) ;
+            take_elemnt.SetTakeInfo ( i ) ;
+            take_elemnt.SetTake ( temp_cord , temp_cord , temp_cord ) ;
+            take_list.push_back ( take_elemnt ) ;
+          }
+
+
+        
+       }
+
+
+       }
+     
+
+                                                
+}
+
+void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int peice_num ) 
+{
+    ResetTakes() ;
+
+     Cordinates temp_cord ;
+     TakeDirection take_elemnt ;
+
+     int y = 0 , x1 = 0 , x2 = 0 , x3 = 0  , x4 = 0  ;
+
+     if ( temp_team->Pieces[peice_num]->isAlive() )          //       that track how many pices left in the board                                
+      { 
+
+       temp_cord = temp_team->Pieces[peice_num]->GetCordinates() ;
+       y = temp_cord.y + temp_team->direction ;
+       x1 = temp_cord.x ;
+       x2 = x1 ;
+
+
+       if ( temp_team->Pieces[peice_num]->GetDirection() != 0 && AllowValue ( y )  )
+       {
+
+          x1 += direction_move_1 ;
+          x2 += direction_move__1 ;
+          
+          x1 = ( AllowValue ( x1 ) && 
+                 ( board[y][x1].empty == false && board[y][x1].id != temp_team->id ) 
+                 ? x1 : direction_move__1 ) ;
+
+          x2 = ( AllowValue ( x2 ) && 
+                 ( board[y][x2].empty == false && board[y][x2].id != temp_team->id ) 
+                 ? x2 : direction_move__1 ) ;
+
+          Cordinates temp_cord1 ;
+          temp_cord1.y = y ;
+          temp_cord1.x = temp_cord.x ;
+
+          y += temp_team->direction ;
+
+          if ( ( x1 != direction_move__1 || x2 != direction_move__1 ) && AllowValue ( y ) )
+          {
+             x1 = ( ( x1 != direction_move__1 && AllowMove ( x1 , direction_move_1 ) )
+                   && board[y][ x1 + direction_move_1 ].empty  
+                   ? x1 + direction_move_1 : direction_move__1 ) ;
+
+             x2 = ( ( x2 != direction_move__1 && AllowMove( x2 , direction_move__1 ) )
+                   && board[y][x2 + direction_move__1 ].empty  
+                   ? x2 + direction_move__1 : direction_move__1 ) ;
+
+
+            Cordinates temp_cord2 ;
+            temp_cord2.y = y ;
+            temp_cord2.x = temp_cord.x ;
+            
+             take_elemnt.SetTake ( temp_cord , temp_cord1 , temp_cord2 ) ;
+             take_elemnt.SetTakeInfo ( peice_num ) ;
 
             bool left = ( x2 != direction_move__1 ? true : false ) , 
                  right = ( x1 != direction_move__1 ? true : false ) ;
@@ -279,12 +461,152 @@ void Take::ScanBoard(  cell (&board)[GRID][GRID] , Team * temp_team  )
           }
        }   
        
-       /* else */ // king condition 
+       else if ( temp_team->Pieces[peice_num]->GetDirection() == 0 )
+       {
+        
+          temp_cord = temp_team->Pieces[peice_num]->GetCordinates() ;
+          y = temp_cord.y ;
+          int y1 = y ;
+          x1 = temp_cord.x ;
+          x2 = x1 ;
 
+          int x3 = x1 , x4 = x1 ;
+          
+          bool top_left = false, top_right = false, bottom_left = false, bottom_right = false;
+          
+          bool top_left_blocked = false ,
+               top_right_blocked = false ,
+               bottom_left_blocked = false ,
+               bottom_right_blocked = false ;
+
+          
+          while ( 1 )
+          { 
+
+              y += direction_move__1 ;
+              y1 += direction_move_1 ;
+
+              x1 += direction_move__1 ;
+              x2 += direction_move_1 ;
+              x3 += direction_move_1 ; 
+              x4 += direction_move__1 ;
+
+              if (!AllowValue(y) && !AllowValue(y1) ) {
+                  break;
+              }
+          
+              if (!top_left_blocked) 
+              {
+                  if (!AllowValue(x1)) {
+                      top_left_blocked = true;
+                  }
+                  else if (!board[y][x1].empty) 
+                  {
+                      top_left_blocked = true; 
+          
+                      if (board[y][x1].id != temp_team->id) 
+                      {
+                          const int _y = y + direction_move__1;
+                          const int _x = x1 + direction_move__1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              top_left = true;
+                          }
+                      }
+                  }
+              }
+          
+
+              if (!top_right_blocked ) 
+              {
+
+                  if (!AllowValue(x3)) {
+                      top_right_blocked = true;
+                  }
+
+                  else if (!board[y][x3].empty ) 
+                  {
+                      top_right_blocked = true; 
+          
+                      if (board[y][x3].id != temp_team->id) 
+                      {
+                          const int _y = y + direction_move__1;
+                          const int _x = x3 + direction_move_1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              top_right = true;
+                          }
+                      }
+                  }
+
+              }
+          
+
+
+
+              if (!bottom_left_blocked) 
+              {
+                  if (!AllowValue(x4)) {
+                      bottom_left_blocked = true;
+                  }
+                  else if (!board[y1][x4].empty) 
+                  {
+                      bottom_left_blocked = true; 
+          
+                      if (board[y1][x4].id != temp_team->id) 
+                      {
+                          const int _y = y1 + direction_move_1;
+                          const int _x = x4 + direction_move__1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              bottom_left = true;
+                          }
+                      }
+                  }
+              }
+          
+
+              if (!bottom_right_blocked ) 
+              {
+
+                  if (!AllowValue(x2)) {
+                      bottom_right_blocked = true;
+                  }
+
+                  else if (!board[y1][x2].empty ) 
+                  {
+                      bottom_right_blocked = true; 
+          
+                      if (board[y1][x2].id != temp_team->id) 
+                      {
+                          const int _y = y1 + direction_move_1;
+                          const int _x = x2 + direction_move_1;
+                          if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                              bottom_right = true;
+                          }
+                      }
+                  }
+
+              }
+          
+
+              if ( top_left_blocked && top_right_blocked && bottom_left_blocked && bottom_right_blocked ) {
+                  break;
+              }
+          }
+
+          
+
+          if ( top_left || top_right || bottom_left || bottom_right  )
+          {
+            take_elemnt.SetDirectionKing ( top_left , top_right , bottom_left , bottom_right ) ;
+            take_elemnt.SetTakeInfo ( peice_num ) ;
+            take_elemnt.SetTake ( temp_cord , temp_cord , temp_cord ) ;
+            take_list.push_back ( take_elemnt ) ;
+          }
+
+
+        
        }
-     
 
-                                                
+
+      }
 }
-
 

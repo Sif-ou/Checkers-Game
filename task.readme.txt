@@ -1,8 +1,12 @@
 
 bugs :
-
+bug of sometimes it dont get it 
 ##############
 
+
+TODO :
+king case
+##############
 
 
 maybe i will do : 

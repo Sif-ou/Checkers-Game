@@ -1,5 +1,18 @@
 #include "piece.hpp"
 
+
+Team::~Team()
+{
+
+    for ( int i = 0 ; i < NUMBER_OF_PIECES ; i++ )
+     {
+         delete this->Pieces[i]  ;
+         this->Pieces[i] = nullptr ; 
+     }
+
+}
+
+
 Piece::Piece ( Cordinates piece_cord , char id , int direction , int num )
 {
     alive = true ;
@@ -9,7 +22,6 @@ Piece::Piece ( Cordinates piece_cord , char id , int direction , int num )
     this->num = num ;
 }
 
-
 bool Piece::isAlive()
 {
     return this->alive ;
@@ -18,7 +30,7 @@ bool Piece::isAlive()
 void Piece::KillPiece()
 {
     this->alive = false ;
-    printf ( " piece killed with success ! \n") ;
+    //printf ( " piece killed with success ! \n") ;
 }
 
 void Piece::SetCordinates ( Cordinates piece_cord )
@@ -29,11 +41,6 @@ void Piece::SetCordinates ( Cordinates piece_cord )
 void Piece::SetDirection ( int direction )
 {
     this->direction = direction ;
-}
-
-bool Piece::PieceState()
-{
-    return alive ;
 }
 
 Cordinates Piece::GetCordinates()
@@ -49,4 +56,16 @@ int Piece::GetNum()
 int Piece::GetDirection()
 {
     return direction ;
+}
+
+void Piece::KingUpgrade()
+{
+    this->direction = UPGRADE_PIECE_DIRECTION ; 
+}
+
+void Team::InitTeam( char id , int direction  )
+{
+        this->Num_Of_Pieces = 12 ;
+        this->id = id ;
+        this->direction = direction ;
 }

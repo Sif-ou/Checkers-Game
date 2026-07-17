@@ -11,9 +11,8 @@ class BOARD
     SDL_Rect MoveRect_img ;
         
 
-    SDL_Surface * board_surface = nullptr ; // to load the board img 
-    SDL_Surface * piece_surface = nullptr ; 
-
+    SDL_Texture * board_texture = nullptr ;
+    SDL_Texture * peice_texture = nullptr ; 
     
 
     Team * TeamR = nullptr ;
@@ -25,25 +24,27 @@ class BOARD
 
     
 
-    void SetBoard () ;
-    void RenderBoard (  SDL_Renderer * r , SDL_Texture * t  ) ;
+    void SetBoard ( SDL_Renderer * r ) ;
+    void RenderBoard (  SDL_Renderer * r ) ;
 
     void SetTeam () ;
     void Team_In_Board ( Team * temp_Team ) ;
     
-    void RendererTeams( SDL_Renderer * r , SDL_Texture * t ) ;
+    void RendererTeams( SDL_Renderer * r  ) ;
     bool LetPiece_Render ( Piece * temp_Piece ) ;
 
     bool Correct_Cords ( Cordinates temp_cord ) ;
     bool Correct_PieceCords ( Cordinates temp_cord , char id ) ;
     int GetPiece_FromBoard ( Cordinates temp_cord ) ;
-
-    void HandlePiece_Move ( int num , char id , Cordinates temp_cords ) ;
+   
     int GetDirection_OfPiece ( Cordinates temp_cord ) ;
 
     void ChangePiece_Cords ( Cordinates * piece_cord , Cordinates * Change_cord , char id  ) ;
-    void ChangePiece_TakeCords (  Cordinates curr_cord , Cordinates opp_cord , Cordinates Change_cord , int direction , char id ) ;
+    void ChangePiece_TakeCords ( Cordinates track_cord , Cordinates curr_cord , Cordinates opp_cord , Cordinates Change_cord , int direction , char id ) ;
 
+
+    void DeleteBoard () ;
+    
     
 
 

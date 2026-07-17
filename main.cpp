@@ -2,7 +2,8 @@
 
 int main( int argc , char * argv[] )
 {
-    GAME_START() ;
+    
+    Launcher() ;
 
      return 0 ;
 }
