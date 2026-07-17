@@ -22,7 +22,8 @@ class Movement
           move_case ,
           draw_case ;
       
-      bool take = false ;
+      bool Kingtake = false ;
+      int KingMove [3] ;
           
     public :
 
@@ -36,9 +37,10 @@ class Movement
      void DeleteMovement () ;
      public :
 
-     void TakeMove ( Cordinates change_cord , int direction , SDL_Renderer * r ) ;
+     void TakeMove ( Cordinates change_cord , int direction , Cordinates* array , SDL_Renderer * r ) ;
 
      bool TakeMove_Clicked ( Cordinates temp ) ;
      int getTakeDirection () ;
+     int* getKingMove () ;
 
 };

@@ -102,8 +102,10 @@ void GAME::Board()
             track->ForcedTake(take->getTakeList(), renderer);
         }
         else {
+
             track->Focus_Draw(renderer);
-            movement->TakeMove(take->getChangeCord(track->getTakeNum()), take->getDirection(track->getTakeNum()), renderer);
+            movement->TakeMove( take->getChangeCord(track->getTakeNum()), take->getDirection(track->getTakeNum()) 
+                              , take->getKingTakes( track->getTakeNum() ) , renderer );
         }
     }
 }
@@ -138,8 +140,8 @@ void GAME::BoardUpdate()
             if (!take_advantage) 
               advantage_num = track->getTakeNum() ;
 
-            board->ChangePiece_TakeCords(track->GetTrack_Cord(), take->getCord(advantage_num), take->getEnemyCord(advantage_num),
-                                         take->getChangeCord(advantage_num), take->getDirection(advantage_num), turn);
+            board->ChangePiece_TakeCords(track->GetTrack_Cord() , take->getCord(advantage_num) , take->getEnemyCord(advantage_num) ,
+                                         take->getChangeCord(advantage_num) , movement->getKingMove() , take->getDirection(advantage_num) , turn );
             movement->Reset_Move();
             take_advantage = true;
         }
@@ -280,6 +282,10 @@ void GAME::Event()
                   temp_team = nullptr ;
 
                 }
+
+                case SDL_SCANCODE_T : 
+                 ChangeTurn() ;
+                 break;
 
              }
              

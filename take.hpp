@@ -11,6 +11,7 @@ struct TakeDirection
                 change_cord ;
      int num ;
 
+   Cordinates change_cord_king [4] ;  /* { 0 => top left / 1 => top right / 2 => bottom left / 3 => bottom right   }*/
 
    public :
    
@@ -18,6 +19,7 @@ struct TakeDirection
      bool left , right ; // normal 
 
      bool top_left , top_right , bottom_left , bottom_right ;
+
 
     void Default () ;
 
@@ -31,13 +33,19 @@ struct TakeDirection
 
     void SetDirectionKing ( bool top_left  , bool top_right , bool bottom_left , bool bottom_right  ) ;
 
+    void setKingTake ( Cordinates t1 , Cordinates t3 , Cordinates t4 , Cordinates t2 ) ;
+
+
     
 
     Cordinates GetCords () ;
     Cordinates GetEnemyCords() ;
     Cordinates GetChangeCords() ;
-    int getDirectionKing () ;
     int getDirection () ;
+
+    Cordinates* getKingDirections() ;
+
+
 
     int GetNum () ; 
 
@@ -69,6 +77,7 @@ class Take
     Cordinates getChangeCord ( int num ) ;
     Cordinates getEnemyCord ( int num ) ;
     int getDirection ( int num ) ;
+    Cordinates* getKingTakes( int num ) ; 
 
     bool isTakeEmpty() ;
     void ResetTakes () ;

@@ -26,6 +26,12 @@ void Movement::Reset_Move ()
     x4 = direction_move__1 ;
     move_case = direction_move__1 ;
     draw_case = direction_move__1 ;
+    Kingtake = false ;
+
+    KingMove[0] = direction_move__1 ; 
+    KingMove[1] = direction_move__1 ; 
+    KingMove[2] = direction_move__1 ; 
+
     curr_cords.Default() ;
 }
 
@@ -187,49 +193,92 @@ void Movement::Move_Draw( SDL_Renderer * r)
         
         int tx1 = x1 , tx2 = x2 , tx3 = x3 , tx4 = x4 ;
 
-
-        while ( tx4 > 0 || tx3 > 0 || tx2 > 0 || tx1 > 0  ) 
-        {
-
-           if ( tx1 != 0 )
+       
+         if ( !Kingtake )
+         {
+        
+           while ( tx4 > 0 || tx3 > 0 || tx2 > 0 || tx1 > 0  ) 
            {
-             temp_cord.x = curr_cords.x - tx1 ;
-             temp_cord.y = curr_cords.y - tx1 ;
-             draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
-             tx1--;
-             SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+   
+              if ( tx1 > 0 )
+              {
+                temp_cord.x = curr_cords.x - tx1 ;
+                temp_cord.y = curr_cords.y - tx1 ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                tx1--;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
+   
+              if ( tx2 > 0 )
+              {
+                temp_cord.x = curr_cords.x + tx2 ;
+                temp_cord.y = curr_cords.y + tx2 ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                tx2--;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
+              if ( tx3 > 0 )
+              {
+                temp_cord.x = curr_cords.x + tx3 ;
+                temp_cord.y = curr_cords.y - tx3 ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                tx3--;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
+              if ( tx4 > 0 )
+              {
+                temp_cord.x = curr_cords.x - tx4 ;
+                temp_cord.y = curr_cords.y + tx4 ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                tx4--;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
            }
 
+         }
+         else
+         {
 
-           if ( tx2 != 0 )
-           {
-             temp_cord.x = curr_cords.x + tx2 ;
-             temp_cord.y = curr_cords.y + tx2 ;
-             draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
-             tx2--;
-             SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
-           }
+   
+              if ( tx1 > 0 )
+              {
+                temp_cord.x = curr_cords.x - tx1  ;
+                temp_cord.y = curr_cords.y - tx1  ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
+   
+              if ( tx2 > 0 )
+              {
+                temp_cord.x = curr_cords.x + tx2  ;
+                temp_cord.y = curr_cords.y + tx2  ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
+              if ( tx3 > 0 )
+              {
+                temp_cord.y = curr_cords.y - tx3  ;
+                temp_cord.x = curr_cords.x + tx3  ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+   
+              if ( tx4 > 0 )
+              {
+                temp_cord.x = curr_cords.x - tx4  ;
+                temp_cord.y = curr_cords.y + tx4  ;
+                draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
+                SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
+              }
+  
 
-           if ( tx3 != 0 )
-           {
-             temp_cord.x = curr_cords.x + tx3 ;
-             temp_cord.y = curr_cords.y - tx3 ;
-             draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
-             tx3--;
-             SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
-           }
-
-           if ( tx4 != 0 )
-           {
-             temp_cord.x = curr_cords.x - tx4 ;
-             temp_cord.y = curr_cords.y + tx4 ;
-             draw_rect = Cords_Into_Rect ( draw_rect , Draw_Cord ( temp_cord ) ) ;
-             tx4--;
-             SDL_RenderCopy ( r , move_texture , &Move_rect , &draw_rect ) ;
-           }
-
-        }
-
+         }
 
         
        } 
@@ -361,20 +410,50 @@ bool Movement::MoveCLicked ( Cordinates temp_cords )
 
 
 
-void Movement::TakeMove (  Cordinates change_cord , int direction , SDL_Renderer * r )
+void Movement::TakeMove (  Cordinates change_cord , int direction , Cordinates* array  , SDL_Renderer * r )
 {
 
   y = change_cord.y ;
-
 
   switch ( direction )
   {
 
 
      case 0 : 
-      
-     
-      
+     {
+
+      if ( array != nullptr )
+      {
+
+        if ( array[0].x == direction_move__1 && array[1].x == direction_move__1 && array[2].x == direction_move__1 && array[3].x == direction_move__1 )
+         move_case = direction_move__1 ;
+        else
+        {
+          const int c1 = ( AllowValue( array[0].x ) ? change_cord.x - array[0].x : direction_move__1 ) , 
+                    c3 = ( AllowValue( array[1].x ) ? array[1].x - change_cord.x : direction_move__1 ) , 
+                    c4 = ( AllowValue( array[2].x ) ? change_cord.x - array[2].x : direction_move__1 ) ,
+                    c2 = ( AllowValue( array[3].x ) ? array[3].x - change_cord.x : direction_move__1 ) ;
+
+          x1 = ( AllowValue( c1 ) ? c1 : direction_move__1 ) ;
+          x2 = ( AllowValue( c2 ) ? c2 : direction_move__1 ) ;
+          x3 = ( AllowValue( c3 ) ? c3 : direction_move__1 ) ;
+          x4 = ( AllowValue( c4 ) ? c4 : direction_move__1 ) ;
+
+          
+          curr_cords.x = change_cord.x ;
+          curr_cords.y = change_cord.y ; 
+
+          Kingtake = true ;
+
+          move_case = UPGRADE_PIECE_DIRECTION ; 
+
+        }
+
+      }
+      else
+       move_case = direction_move__1 ;
+
+     }
       break;
 
      case 1 :
@@ -409,7 +488,81 @@ bool Movement::TakeMove_Clicked ( Cordinates temp )
    switch ( move_case )
    {
       case 0 :
-        printf ( " still w8 king !!!!! \n " ) ;
+      
+         
+        if ( x1 > direction_move__1 )
+        {
+           const int _x = curr_cords.x - x1 ;
+           const int _y = curr_cords.y - x1 ;
+           
+           if ( AllowValue ( _x ) && AllowValue ( _y ) )
+           {
+              if ( temp.x == _x && temp.y == _y )
+              {
+                 KingMove[0] = direction_move__1 ; 
+                 KingMove[1] = direction_move__1 ;
+                 KingMove[2] = x1 ;
+                 r = true ;
+              }
+           } 
+        }
+
+        else if ( x3 > direction_move__1 )
+        {
+           const int _x = curr_cords.x + x3 ;
+           const int _y = curr_cords.y - x3 ;
+           
+           if ( AllowValue ( _x ) && AllowValue ( _y ) )
+           {
+              if ( temp.x == _x && temp.y == _y )
+              {
+                 KingMove[0] = direction_move_1 ; 
+                 KingMove[1] = direction_move__1 ;
+                 KingMove[2] = x3 ;
+                 r = true ;
+              }
+           } 
+        }
+
+        else if ( x4 > direction_move__1 )
+        {
+           const int _x = curr_cords.x - x4 ;
+           const int _y = curr_cords.y + x4 ;
+           
+           if ( AllowValue ( _x ) && AllowValue ( _y ) )
+           {
+              if ( temp.x == _x && temp.y == _y )
+              {
+                 KingMove[0] = direction_move__1 ; 
+                 KingMove[1] = direction_move_1 ;
+                 KingMove[2] = x4 ;
+                 r = true ;
+              }
+           } 
+        }
+
+        else if ( x2 > direction_move__1 )
+        {
+           const int _x = curr_cords.x + x2 ;
+           const int _y = curr_cords.y + x2 ;
+           
+           if ( AllowValue ( _x ) && AllowValue ( _y ) )
+           {
+              if ( temp.x == _x && temp.y == _y )
+              {
+                 KingMove[0] = direction_move_1 ; 
+                 KingMove[1] = direction_move_1 ;
+                 KingMove[2] = x2 ;
+                 r = true ;
+              }
+           } 
+
+        }
+         
+
+
+        
+
        break;
 
 
@@ -454,3 +607,12 @@ void Movement::DeleteMovement()
 {
   SDL_DestroyTexture ( this->move_texture ) ;
 } 
+
+int* Movement::getKingMove () 
+{
+
+  if ( KingMove[0] == direction_move__1 )
+   return nullptr ;
+
+  return KingMove ;
+}
