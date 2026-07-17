@@ -68,19 +68,11 @@ void Tracker::ForcedTake (std::list<TakeDirection> take_list , SDL_Renderer * r 
    for (auto& take : take_list ) 
    {
 
-    Cordinates temp = take.getCords() ,
-               temp1 = take.getCords() ;
+    Cordinates temp = take.GetCords() ;
 
-    temp1.x += 2 ;
     draw_rect = Cords_Into_Rect (  draw_rect ,  BOARD_To_MOUSE_Cord ( temp ) ) ;
+    draw_rect.x--;
     SDL_RenderCopy ( r , t , &Focus_rect  , &draw_rect ) ;
-
-    if ( take.right )
-    {
-      draw_rect = Cords_Into_Rect (  draw_rect ,  BOARD_To_MOUSE_Cord ( temp1 ) ) ;
-      SDL_RenderCopy ( r , t , &Focus_rect  , &draw_rect ) ;
-    }
-
 
    }
 
@@ -95,10 +87,10 @@ bool Tracker::isTakePiece ( std::list<TakeDirection> take_list )
 
  for (auto& take : take_list )
  {
-   temp = take.getCords() ;
+   temp = take.GetCords() ;
    if ( temp.x == track_cord.x && temp.y == track_cord.y )
    {
-    take_num = take.getNum() ;
+    take_num = take.GetNum() ;
     return true ;
    } 
     

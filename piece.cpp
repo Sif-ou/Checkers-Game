@@ -9,6 +9,12 @@ Piece::Piece ( Cordinates piece_cord , char id , int direction , int num )
     this->num = num ;
 }
 
+
+bool Piece::isAlive()
+{
+    return this->alive ;
+}
+
 void Piece::KillPiece()
 {
     this->alive = false ;

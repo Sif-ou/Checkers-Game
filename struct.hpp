@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-constexpr int NUMBER_OF_PIECES = 12;
+constexpr int NUMBER_OF_PIECES = 12 ;
 
 constexpr int CELL_DES = 90 ;
 constexpr int PIECE_WIDTH = 70;

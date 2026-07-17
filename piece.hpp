@@ -16,6 +16,7 @@ class Piece
        Piece ( Cordinates piece_cord , char id , int direction , int num ) ;
        
        void KillPiece () ;
+       bool isAlive () ;
 
        Cordinates GetCordinates () ;
        int GetDirection () ;

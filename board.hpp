@@ -42,7 +42,7 @@ class BOARD
     int GetDirection_OfPiece ( Cordinates temp_cord ) ;
 
     void ChangePiece_Cords ( Cordinates * piece_cord , Cordinates * Change_cord , char id  ) ;
-    void ChangePiece_TakeCords ( Cordinates Change_cord , int direction , char id  ) ;
+    void ChangePiece_TakeCords (  Cordinates curr_cord , Cordinates opp_cord , Cordinates Change_cord , int direction , char id ) ;
 
     
 
