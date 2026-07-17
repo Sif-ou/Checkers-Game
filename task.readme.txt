@@ -1,11 +1,10 @@
 
 bugs :
-King take move 
+
 ##############
 
 
 TODO :
-king case
 ##############
 
 
