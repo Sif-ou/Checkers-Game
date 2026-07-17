@@ -10,7 +10,6 @@ class GAME
 
       SDL_Renderer * renderer = nullptr ;
       SDL_Window * window = nullptr ;
-      SDL_Texture * texture = nullptr ;
       
       BOARD * board = nullptr ;
       Tracker * track = nullptr ;
@@ -19,11 +18,13 @@ class GAME
   
       SDL_Event event ;
       char turn = 'r' ;
-      Team * curr_team = nullptr ;
+
       
 
       bool run = true ;
       bool piece_clicked = false ;
+      bool take_advantage = false ;
+      int advantage_num ;
 
     public : 
 
@@ -31,8 +32,6 @@ class GAME
      int x_cord , y_cord ;
      /* ###### */
      
-
-
      void Init () ;
      void Clear () ;
      void Present () ;
@@ -45,3 +44,5 @@ class GAME
 };
 
 void GAME_START () ;
+
+void Launcher () ;

@@ -21,7 +21,8 @@ class Piece
        Cordinates GetCordinates () ;
        int GetDirection () ;
        int GetNum() ;
-       bool PieceState () ;
+       void KingUpgrade() ;
+
        
        void SetCordinates ( Cordinates piece_cord ) ;
        void SetDirection ( int direction ) ;
@@ -37,6 +38,7 @@ class Piece
  */
 struct Team
 {
+
     int Num_Of_Pieces ;
     int direction ;
 
@@ -46,11 +48,8 @@ struct Team
     SDL_Rect Normal_Piece_img ,
              Upgraded_Piece_img ;
 
-    void SetTeam( char id , int direction )
-    {
-        Num_Of_Pieces = 12 ;
-        this->id = id ;
-        this->direction = direction ;
-    }
+
+    void InitTeam( char id , int direction ) ;
+    ~Team() ;
 
 };

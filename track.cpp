@@ -6,9 +6,13 @@ void Tracker::Reset_Track ()
     track_cord.Default() ;
 }
 
-Tracker::Tracker()
+Tracker::Tracker( SDL_Renderer * r  )
 {
-  track_surface = IMG_Load ( "assets/move.png" ) ; 
+  SDL_Surface * track_surface = IMG_Load ( "assets/move.png" ) ; 
+
+ track_texture =SDL_CreateTextureFromSurface ( r , track_surface ) ;
+
+ SDL_FreeSurface ( track_surface ) ;
 
   track_cord.x = 9 ;
   track_cord.y = 9 ;   
@@ -29,7 +33,7 @@ Tracker::Tracker()
 
 void Tracker::DeleteTracker ()
 {
-    SDL_FreeSurface ( track_surface ) ;
+    SDL_DestroyTexture ( track_texture ) ; 
 }
 
 void Tracker::SetTrack_cord( int x , int y )
@@ -44,14 +48,13 @@ Cordinates Tracker::TrackCord_Board_converter ()
     return track_cord ;
 }
 
-void Tracker::Focus_Draw ( SDL_Renderer * r , SDL_Texture * t ) 
+void Tracker::Focus_Draw ( SDL_Renderer * r ) 
 {
    draw_rect = Cords_Into_Rect (  draw_rect ,  BOARD_To_MOUSE_Cord ( track_cord ) ) ;
    draw_rect.x--;
 
-   t = SDL_CreateTextureFromSurface ( r , track_surface ) ;
-   SDL_RenderCopy ( r , t , &Focus_rect , &draw_rect ) ;
-   SDL_DestroyTexture( t ) ;
+   SDL_RenderCopy ( r , track_texture , &Focus_rect , &draw_rect ) ;
+
 }
 
 Cordinates Tracker::GetTrack_Cord ()
@@ -59,10 +62,9 @@ Cordinates Tracker::GetTrack_Cord ()
     return track_cord ;
 }
 
-void Tracker::ForcedTake (std::list<TakeDirection> take_list , SDL_Renderer * r , SDL_Texture * t  )
+void Tracker::ForcedTake (std::list<TakeDirection> take_list , SDL_Renderer * r   )
 {
 
- t = SDL_CreateTextureFromSurface ( r , track_surface ) ;
 
   if ( take_list.empty() == false )
    for (auto& take : take_list ) 
@@ -72,11 +74,10 @@ void Tracker::ForcedTake (std::list<TakeDirection> take_list , SDL_Renderer * r 
 
     draw_rect = Cords_Into_Rect (  draw_rect ,  BOARD_To_MOUSE_Cord ( temp ) ) ;
     draw_rect.x--;
-    SDL_RenderCopy ( r , t , &Focus_rect  , &draw_rect ) ;
+    SDL_RenderCopy ( r , track_texture , &Focus_rect  , &draw_rect ) ;
 
    }
 
-SDL_DestroyTexture ( t ) ;
 
 }
 

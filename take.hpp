@@ -14,7 +14,10 @@ struct TakeDirection
 
    public :
    
-     bool left , right , top , bottom ;
+
+     bool left , right ; // normal 
+
+     bool top_left , top_right , bottom_left , bottom_right ;
 
     void Default () ;
 
@@ -26,7 +29,9 @@ struct TakeDirection
 
     void SetDirection ( bool right ,  bool left ) ;
 
-    void SetDirectionKing ( bool right , bool left , bool top , bool bottom ) ;
+    void SetDirectionKing ( bool top_left  , bool top_right , bool bottom_left , bool bottom_right  ) ;
+
+    
 
     Cordinates GetCords () ;
     Cordinates GetEnemyCords() ;
@@ -52,9 +57,9 @@ class Take
 
     /**
      * scan for piece only 
-     * usually used when the first take is played 
      */
-    void ScanPiece ( cell (&board)[GRID][GRID] , Team * temp_team , int num ) ;
+
+    void Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int peice_num ) ;
 
 
     std::list<TakeDirection> getTakeList () ;
@@ -67,6 +72,7 @@ class Take
 
     bool isTakeEmpty() ;
     void ResetTakes () ;
+
 
 
     void TestFunc ()
