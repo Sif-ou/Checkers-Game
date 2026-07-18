@@ -445,7 +445,30 @@ void Movement::TakeMove (  Cordinates change_cord , int direction , Cordinates* 
 
           Kingtake = true ;
 
+
           move_case = UPGRADE_PIECE_DIRECTION ; 
+
+
+                printf ( 
+                 " ################ \n "
+                 " x1  => %d \n "
+                 " x3  => %d \n "
+                 " x4 => %d \n "
+                 " x2 => %d \n "
+                 " ################ \n "
+                 " ################ \n "
+                 "  array[0].x  => %d \n "
+                 "  array[1].x  => %d \n "
+                 "  array[2].x => %d \n "
+                 "  array[3].x => %d \n "
+                 " ################ \n "
+                 " ################ \n "
+                 "  c1  => %d \n "
+                 "  c3  => %d \n "
+                 "  c4 => %d \n "
+                 "  c2 => %d \n "
+                 " ################ \n ",
+                    x1 , x3 , x4 , x2 ,  array[0].x , array[1].x , array[2].x , array[3].x  , c1 , c3 , c4 , c2 ) ;
 
         }
 
@@ -507,7 +530,7 @@ bool Movement::TakeMove_Clicked ( Cordinates temp )
            } 
         }
 
-        else if ( x3 > direction_move__1 )
+        if ( x3 > direction_move__1 )
         {
            const int _x = curr_cords.x + x3 ;
            const int _y = curr_cords.y - x3 ;
@@ -524,7 +547,7 @@ bool Movement::TakeMove_Clicked ( Cordinates temp )
            } 
         }
 
-        else if ( x4 > direction_move__1 )
+        if ( x4 > direction_move__1 )
         {
            const int _x = curr_cords.x - x4 ;
            const int _y = curr_cords.y + x4 ;
@@ -541,7 +564,7 @@ bool Movement::TakeMove_Clicked ( Cordinates temp )
            } 
         }
 
-        else if ( x2 > direction_move__1 )
+        if ( x2 > direction_move__1 )
         {
            const int _x = curr_cords.x + x2 ;
            const int _y = curr_cords.y + x2 ;
@@ -560,9 +583,16 @@ bool Movement::TakeMove_Clicked ( Cordinates temp )
         }
          
 
-
-        
-
+                /*printf ( 
+                 " x1  => %d \n "
+                 " x3  => %d \n "
+                 " x4 => %d \n "
+                 " x2 => %d \n "
+                 " ################ \n "
+                 " array[0] => %d \n "
+                 " array[1] => %d \n "
+                 " array[2] => %d \n " ,
+                    x1 , x3 , x4 , x2 , KingMove[0] , KingMove[1] , KingMove[2] ) ;*/
        break;
 
 
@@ -610,9 +640,5 @@ void Movement::DeleteMovement()
 
 int* Movement::getKingMove () 
 {
-
-  if ( KingMove[0] == direction_move__1 )
-   return nullptr ;
-
   return KingMove ;
 }

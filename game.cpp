@@ -150,9 +150,15 @@ void GAME::BoardUpdate()
     }
 
     if (take_advantage)
-        take->Scan_Advantage(board->getBoard(), board->GetTeam(turn), advantage_num);
+        {
+            take->Scan_Advantage(board->getBoard(), board->GetTeam(turn), advantage_num);
+            //movement->Reset_Move() ;
+        }
     else
-        take->ScanBoard(board->getBoard(), board->GetTeam(turn));
+        {
+            take->ScanBoard(board->getBoard(), board->GetTeam(turn));
+            //movement->Reset_Move() ;
+        }
 }
 void GAME::Event()
 {

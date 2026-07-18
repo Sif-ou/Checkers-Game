@@ -300,6 +300,7 @@ void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cor
 
         case 0 : 
 
+
         if ( array != nullptr )
         {
           
@@ -308,7 +309,10 @@ void BOARD::ChangePiece_TakeCords ( Cordinates track_cord ,  Cordinates curr_cor
             
             opp_cord.x +=  (array[0] * array[2]) - ( 1 * array[0] )  ;
             opp_cord.y +=  (array[1] * array[2]) - ( 1 * array[1] )  ;
+
+
             let_change = true ;
+
         }
          
          break;

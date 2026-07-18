@@ -513,17 +513,10 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
 
           }
        }   
-       
        else if ( temp_team->Pieces[peice_num]->GetDirection() == 0 )
        {
         
-         Cordinates temp1 , temp2 , temp3 , temp4 ;
-          
-          temp1.x = direction_move_1 ; temp1.y = direction_move__1 ;
-          temp2.x = direction_move_1 ; temp2.y = direction_move__1 ;
-          temp3.x = direction_move_1 ; temp3.y = direction_move__1 ;
-          temp4.x = direction_move_1 ; temp4.y = direction_move__1 ;
-
+          take_elemnt.Default() ;
           temp_cord = temp_team->Pieces[peice_num]->GetCordinates() ;
           y = temp_cord.y ;
           int y1 = y ;
@@ -539,6 +532,13 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                bottom_left_blocked = false ,
                bottom_right_blocked = false ;
 
+          
+         Cordinates temp1 , temp2 , temp3 , temp4 ;
+          
+          temp1.x = direction_move__1 ; temp1.y = direction_move__1 ;
+          temp2.x = direction_move__1 ; temp2.y = direction_move__1 ;
+          temp4.x = direction_move__1 ; temp4.y = direction_move__1 ;
+          temp3.x = direction_move__1 ; temp3.y = direction_move__1 ;
           
           while ( 1 )
           { 
@@ -569,8 +569,9 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _y = y + direction_move__1;
                           const int _x = x1 + direction_move__1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                             
                              temp1.x = _x ;
-                             temp1.y = _y ; 
+                             temp1.y = _y ;
                              top_left = true;
                           }
                       }
@@ -595,7 +596,7 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _x = x3 + direction_move_1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
                              temp3.x = _x ;
-                             temp3.y = _y ; 
+                             temp3.y = _y ;
                              top_right = true;
                           }
                       }
@@ -620,8 +621,9 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _y = y1 + direction_move_1;
                           const int _x = x4 + direction_move__1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
+                             
                              temp4.x = _x ;
-                             temp4.y = _y ; 
+                             temp4.y = _y ;
                              bottom_left = true;
                           }
                       }
@@ -646,7 +648,7 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
                           const int _x = x2 + direction_move_1;
                           if (AllowValue(_y) && AllowValue(_x) && board[_y][_x].empty) {
                              temp2.x = _x ;
-                             temp2.y = _y ; 
+                             temp2.y = _y ;  
                              bottom_right = true;
                           }
                       }
@@ -675,7 +677,6 @@ void Take::Scan_Advantage ( cell (&board)[GRID][GRID] , Team * temp_team , int p
 
         
        }
-
 
       }
 }
