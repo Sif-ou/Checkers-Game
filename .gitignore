@@ -1,15 +1,21 @@
-# Ignore object files
-*.o
+# Prerequisites
+*.d
 
-# Ignore executable files (Windows and Linux/Mac defaults)
+# Object files (compiled code)
+obj/
+*.o
+*.obj
+
+# Executables (built binaries)
 *.exe
 *.out
-a.out
+checkers
 
-# Ignore OS-specific hidden files
-.DS_Store
-Thumbs.db
-
-# Optional: Ignore your final build/bin folder if you output there
-/build/
-/bin/
+# IDE Configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

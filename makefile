@@ -1,3 +1,7 @@
+# ====================================================================
+#  SDL2 Smart Cross-Platform Makefile
+# ====================================================================
+
 # === Compiler and Source Configuration ===
 CXX       = g++
 SRC       = main.cpp game.cpp board.cpp track.cpp Movement.cpp piece.cpp take.cpp struct.cpp
@@ -10,9 +14,9 @@ ifeq ($(OS),Windows_NT)
     # --- Windows Settings ---
     OUT       = checkers.exe
     
-    # 1. Try to automatically detect SDL2 using pkg-config (e.g., MSYS2/MinGW setups)
-    PKG_FLAGS_C := $(shell pkg-config --cflags sdl2 SDL2_image 2>/dev/null)
-    PKG_FLAGS_L := $(shell pkg-config --libs sdl2 SDL2_image 2>/dev/null)
+    # 1. Try to automatically detect SDL2 using pkg-config (silenced with Windows 2>nul)
+    PKG_FLAGS_C := $(shell pkg-config --cflags sdl2 SDL2_image 2>nul)
+    PKG_FLAGS_L := $(shell pkg-config --libs sdl2 SDL2_image 2>nul)
 
     ifneq ($(PKG_FLAGS_C),)
         # If pkg-config finds SDL2 globally, use it automatically
@@ -20,9 +24,8 @@ ifeq ($(OS),Windows_NT)
         LDFLAGS   = 
         LIBS      = $(PKG_FLAGS_L)
     else
-        # 2. Fallback: Use a customizable local directory path if pkg-config isn't present
-        # The '?=' operator allows other developers to override this path from their terminal
-        SDL_DIR  ?= C:/SDL/SDL2
+        # 2. Fallback: Adjusted default path to point directly to your real /src folder setup
+        SDL_DIR  ?= C:/SDL/SDL2/src
         
         CXXFLAGS  = -g -I$(SDL_DIR)/include
         LDFLAGS   = -L$(SDL_DIR)/lib

@@ -60,19 +60,7 @@ The game expects an `assets` directory in the root folder alongside the executab
 
 This project includes a smart `Makefile` that automatically detects your operating system and applies the correct compiler paths. It officially supports **Windows**, **Linux**, and **macOS**.
 
-**1. Install SDL2:**
-* **Linux (Ubuntu/Debian):** `sudo apt-get install libsdl2-dev libsdl2-image-dev`
-* **macOS (Homebrew):** `brew install sdl2 sdl2_image`
-* **Windows (MinGW):** Ensure your local `src/include` and `src/lib` folders are populated with the SDL2 development files.
-
-**2. Build the Game:**
-Open your terminal in the project directory and run:
-```bash
-make
-```
-
-**3. Run the Game:**
-```bash
-make run
-```
-*(Note: You can also use `make clean` to delete built object files and the old executable).*
+### 1. Install SDL2
+* **Linux (Ubuntu/Debian):** 
+  ```bash
+  sudo apt-get install libsdl2-dev libsdl2-image-dev

@@ -4,7 +4,6 @@
 #include <list>
 #include <iostream>
 
-
 constexpr int NUMBER_OF_PIECES = 12 ;
 
 constexpr int CELL_DES = 90 ;
@@ -17,7 +16,6 @@ constexpr int WIDTH = 1080;
 constexpr int HEIGHT = 720;
 constexpr int GRID = 8;     
 constexpr int TGRID = 7;   
-
 
 constexpr int UPGRADED_RED_IMG_W = 243;
 constexpr int UPGRADED_RED_IMG_H = 236;
