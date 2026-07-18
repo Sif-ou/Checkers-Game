@@ -1,0 +1,15 @@
+# Ignore object files
+*.o
+
+# Ignore executable files (Windows and Linux/Mac defaults)
+*.exe
+*.out
+a.out
+
+# Ignore OS-specific hidden files
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore your final build/bin folder if you output there
+/build/
+/bin/
