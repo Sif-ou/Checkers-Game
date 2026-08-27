@@ -24,6 +24,7 @@ To compile and modify this project, you need the following libraries installed o
 * [SDL2_image](https://www.libsdl.org/projects/SDL_image/) (For loading PNG assets)
 * A C++11 (or higher) compatible compiler (e.g., g++, clang, MSVC)
 * `make` (For running the build script)
+* Note: All required DLL files are included.
 
 ## Assets Required
 
